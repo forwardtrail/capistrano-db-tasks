@@ -58,10 +58,10 @@ module Database
     def initialize(cap_instance)
       super(cap_instance)
       @config = ""
-      @cap.run("cat #{@cap.current_path}/config/database.yml") do |c, s, d|
+      @cap.run(%{ruby -rerb -e 'puts ERB.new(File.read("#{@cap.current_path}/config/database.yml")).result'}) do |c, s, d|
         @config += d
       end
-      @config = YAML.load(ERB.new(@config).result)[@cap.local_rails_env.to_s]
+      @config = YAML.load(ERB.new(@config).result)[@cap.rails_env.to_s]
     end
 
     def dump
@@ -121,6 +121,7 @@ module Database
       local_db  = Database::Local.new(instance)
       remote_db = Database::Remote.new(instance)
 
+      require 'byebug';byebug
       check(local_db, remote_db)
 
       remote_db.dump.download
