@@ -121,7 +121,6 @@ module Database
       local_db  = Database::Local.new(instance)
       remote_db = Database::Remote.new(instance)
 
-      require 'byebug';byebug
       check(local_db, remote_db)
 
       remote_db.dump.download
